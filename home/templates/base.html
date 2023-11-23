@@ -1,10 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
+{% load static %}
+<html lang="pt-br">
+
+{% block head %}
+    {% include "head.html" %}
+{% endblock %}
+
+
 <body>
-$END$
+<! -- Logo -->
+
+<div class="header">
+    <img width=20% src="{% static 'img/LOGO-INFRA-PNG.png' %}">
+    <div class="tit" style="text-align:center; font-size: 150%; font-weight: bold;">
+        <p> GERENCIAMENTO DE ESTOQUE </p>
+    </div>
+
+</div>
+{% block registros %}
+{% include "registros.html" %}
+{% endblock %}
+<! -- Menu -->
+<div id='cssmenu'>
+    <ul>
+        <li><a href='home.html'><span>ESTOQUE</span></a></li>
+        <li class='active has-sub'><a href='#'><span>GERENCIAMENTO DE ESTOQUE</span></a>
+            <ul>
+                <li class='has-sub'><a href="informaçõesalgoritmo.html"><span>CADASTRAR PRODUTO</span></a></li>
+                <li class='has-sub'><a href="introduçãoalgoritmo.html"><span>REMOVER PRODUTO</span></a></li>
+            </ul>
+        </li>
+        <li class='active has-sub'><a href='#'><span>ENTRADA</span></a></li>
+        <li class='active has-sub'><a href='#'><span>SAÍDA</span></a></li>
+    </ul>
+</div>
+
+<!-- InstanceEndEditable -->
+
 </body>
+<!-- InstanceEnd -->
 </html>
+
+
+
+
+
+
+{% block content %}
+{% endblock %}
+
+{% block footer %}
+    {% include "footer.html" %}
+{% endblock %}
