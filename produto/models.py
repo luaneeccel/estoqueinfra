@@ -7,8 +7,8 @@ class Produto(models.Model):
     observacao = models.CharField('Observações', max_length=200, help_text='Observações')
     tipo = models.CharField('Tipo', max_length=50, help_text='Tipo do Produto')
     unidade = models.CharField('Unidade', max_length=50, help_text='Unidade', default='')
-    quantidade = models.DecimalField('Quantidade', max_length=5, max_digits=5, decimal_places=2, help_text='Quantidade em Estoque do produto')
-    quantidademin = models.DecimalField('Quantidade minima', max_length=5, max_digits=5, decimal_places=2)
+    quantidade = models.IntegerField('Quantidade', help_text='Quantidade em Estoque do produto')
+    quantidademin = models.IntegerField('Quantidade minima')
     foto = StdImageField('Foto', upload_to='produtos', variations={'thumbnail':{'width':100, 'height':100, 'crop':True}}, delete_orphans=True, null=True, blank=True)
     class Meta:
         verbose_name ='Produto'
