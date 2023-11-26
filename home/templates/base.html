@@ -23,11 +23,11 @@
 <! -- Menu -->
 <div id='cssmenu'>
     <ul>
-        <li><a href='home.html'><span>ESTOQUE</span></a></li>
+        <li><a href="{% url 'produtos' %}"><span>ESTOQUE</span></a></li>
         <li class='active has-sub'><a href='#'><span>GERENCIAMENTO DE ESTOQUE</span></a>
             <ul>
-                <li class='has-sub'><a href="informaçõesalgoritmo.html"><span>CADASTRAR PRODUTO</span></a></li>
-                <li class='has-sub'><a href="introduçãoalgoritmo.html"><span>REMOVER PRODUTO</span></a></li>
+                <li class='has-sub'><a href="{% url 'produto_adicionar' %}"><span>CADASTRAR PRODUTO</span></a></li>
+                <li class='has-sub'><a href="{% url 'editremov' %}"><span>EDITAR/REMOVER PRODUTO</span></a></li>
             </ul>
         </li>
         <li class='active has-sub'><a href='#'><span>ENTRADA</span></a></li>

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import EntradaProdutoForm
-# from .models import Produto
+#from .models import Produto
 
 
 def entrada_produto(request):

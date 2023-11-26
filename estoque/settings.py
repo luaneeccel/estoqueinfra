@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-INSTALLED_APPS += ['stdimage']
-INSTALLED_APPS += ['home', 'produto', 'entrada',]
+INSTALLED_APPS += ['stdimage', 'django_select2',]
+INSTALLED_APPS += ['home', 'produto', 'entrada', 'saida',]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -118,11 +118,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-MEDIA_URLS = '/media/'
+MEDIA_URL = '/media/'
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-
-
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

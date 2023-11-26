@@ -4,7 +4,7 @@ from .models import EntradaProduto
 @admin.register(EntradaProduto)
 class EntradaProdutoAdmin(admin.ModelAdmin):
     list_display = ['produto', 'quantidade', 'data_entrada']
-    search_fields = ('produto.name', )  # Permite pesquisar por nome ou código do produto
+    search_fields = ('produto.nome','produto.codigo' )  # Permite pesquisar por nome ou código do produto
     list_filter = ('data_entrada',)
     # date_hierarchy = 'data_entrada'  # Adiciona navegação por data
     ordering = ('-data_entrada',)  # Exibe as entradas mais recentes primeiro

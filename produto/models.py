@@ -1,9 +1,10 @@
 from django.db import models
 from stdimage import StdImageField
+from django_select2 import forms as s2forms
 # Create your models here.
 class Produto(models.Model):
     nome=models.CharField('Nome', max_length=50, help_text='Nome do Produto')
-    codigo = models.CharField('Código', max_length=10, help_text='Código do Produto')
+    codigo = models.CharField('Código', max_length=10,unique=True, help_text='Código do Produto')
     observacao = models.CharField('Observações', max_length=200, help_text='Observações')
     tipo = models.CharField('Tipo', max_length=50, help_text='Tipo do Produto')
     unidade = models.CharField('Unidade', max_length=50, help_text='Unidade', default='')
