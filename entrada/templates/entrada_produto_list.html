@@ -1,0 +1,29 @@
+<!-- templates/saida_produto_list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="subtitle is-size-4 has-text-centered">Lista de Entradas de Produtos</h1>
+
+<div class="container has-text-centered">
+<div class=class="table">
+ <table class="table is-table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+  <thead>
+    <tr>
+      <th>Produto</th>
+      <th>Quantidade</th>
+      <th>Data de Entrada</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entrada in entradas %}
+      <tr>
+        <td>{{ entrada.produto.nome }}</td>
+        <td>{{ entrada.quantidade }}</td>
+        <td>{{ entrada.data_entrada }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+    </div>
+{% endblock %}

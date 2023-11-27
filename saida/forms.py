@@ -1,9 +1,7 @@
 from django import forms
-from .models import EntradaProduto, Produto
+from .models import SaidaProduto, Produto
 from django.utils import timezone
-
-
-class EntradaProdutoForm(forms.ModelForm):
+class SaidaProdutoForm(forms.ModelForm):
     produto = forms.ModelChoiceField(
         queryset=Produto.objects.all(),
         widget=forms.Select(attrs={'class': 'input'}),
@@ -11,8 +9,8 @@ class EntradaProdutoForm(forms.ModelForm):
     )
 
     class Meta:
-        model = EntradaProduto
-        fields = ['produto', 'quantidade', 'data_entrada']
+        model = SaidaProduto
+        fields = ['produto', 'quantidade', 'data_saida']
 
         widgets = {
             'quantidade': forms.NumberInput(
@@ -22,6 +20,6 @@ class EntradaProdutoForm(forms.ModelForm):
 
     def save(self, commit=True):
         # Preenche o campo data_saida com a data e hora atuais antes de salvar
-        self.instance.data_entrada = timezone.now()
+        self.instance.data_saida = timezone.now()
 
-        return super(EntradaProdutoForm, self).save(commit)
+        return super(SaidaProdutoForm, self).save(commit)

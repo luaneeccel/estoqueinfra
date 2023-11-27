@@ -1,0 +1,30 @@
+
+
+{% extends "base.html" %}
+
+
+
+
+{% block content %}
+    <section class="section">
+        <div class="container">
+            <div class="field">
+                <div class="column is-half is-off-set-one-quarter">
+                    <h3 class="title is-size-3">Registrar Entrada de Produto</h3>
+                    <form class="label is-capitalized" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+
+                        <button class="button is-link is-primary" type="submit">Salvar</button>
+                        <button class="button is-danger is-pulled-right" type="reset">
+                            <a href="{% url 'produtos' %}">Cancelar</a>
+                        </button>
+                        <a href="{% url 'entrada_produto_list' %}">
+                            <p>Lista de Entrada de Produtos</p>
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

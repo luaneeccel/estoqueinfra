@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.db.models import Q
 
 # Create your views here.
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -13,12 +14,15 @@ class ProdutoView(ListView):
 
     def get_queryset(self, *args, **kwargs):
         buscar = self.request.GET.get('buscar')
-        qs = super(ProdutoView, self).get_queryset(*args, **kwargs)
-        if buscar:
-            qs = qs.filter(nome__icontains=buscar)
+        buscar_codigo = self.request.GET.get('buscar_codigo')
 
-        paginator= Paginator (qs, 2)
-        listagem =paginator.get_page(self.request.GET.get('page'))
+        qs = super(ProdutoView, self).get_queryset(*args, **kwargs)
+
+        if buscar:
+            qs = qs.filter(Q(nome__icontains=buscar) | Q(codigo__icontains=buscar_codigo))
+
+        paginator = Paginator(qs, 2)
+        listagem = paginator.get_page(self.request.GET.get('page'))
         return listagem
 class ProdutoAddView(CreateView):
     form_class = ProdutoModelForm
