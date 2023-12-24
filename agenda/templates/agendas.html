@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% if object_list %}
+<section class="section has-background-link-light">
+    <div class="container">
+        <form id="formListaAgendas" action="" method="GET">
+            <input type="hidden" name="imprimir" id="imprimir" value="">
+            <div class="field is-grouped is-flex is-align-items-center is-flex-wrap-wrap">
+
+                <label class="label p-2 mt-2">{{ form.filtro_tempo.label }} </label>
+                <div class="control is-expanded">
+                    {{ form.filtro_tempo }}
+                </div>
+
+
+                <label class="label p-2 mt-2">{{ form.auditorio.label }} </label>
+                <div class="control is-expanded">
+                    {{ form.auditorio}}
+                </div>
+
+                <label class="label p-2 mt-2">{{ form.status.label }} </label>
+                <div class="control is-expanded">
+                    {{ form.status}}
+                </div>
+
+                <label class="label p-2 mt-2">Nome do solicitante ou evento: </label>
+                <div class="control is-expanded">
+                    <input class="input" type="text" name="buscar" value="{{ request.GET.buscar }}"
+                           placeholder="Digite o nome do solicitante ou evento">
+                </div>
+
+                <div class="control">
+                    <button type="button" class="button is-link" onclick="geraPdf('', 'formListaAgendas');">
+                        Buscar
+                    </button>
+                </div>
+
+<!--                <div class="control">-->
+<!--                    <button type="button" class="button is-link"-->
+<!--                            onclick="geraPdf('pdf', 'formListaAgendas');">-->
+<!--                        Imprimir-->
+<!--                    </button>-->
+<!--                </div>-->
+
+            </div>
+        </form>
+
+        <div style="text-align: center;"><h1 class="subtitle is-size-4">Agendamentos Cadastradas</h1></div>
+        <div class="table">
+            <table class="table is-table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                <thead>
+                <tr>
+                    <th class="has-text-centered">Data</th>
+                    <th class="has-text-centered">Hora Inicial</th>
+
+                    <th class="has-text-centered">Hora Final</th>
+
+                    <th class="has-text-centered">Auditório</th>
+
+                    <th class="has-text-centered">Evento</th>
+                    <th class="has-text-centered">Número de pessoas</th>
+                    <th class="has-text-centered">Solicitante</th>
+                    <th class="has-text-centered">Contato</th>
+
+                    <th class="has-text-centered">Equipamentos</th>
+                    <th class="has-text-centered">Status</th>
+                    <th class="has-text-centered">Termo assinado</th>
+
+                    <th class="has-text-centered" style="width: 100px;">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for agenda in object_list %}
+                <tr>
+                    <td>
+                        <a href="#" data-bulma-modal="modal{{ agenda.id }}">
+                            {{ agenda.data|date:"d/m/Y" }}
+                        </a>
+
+<!--                    <td> {{ agenda.data|date:"d/m/Y" }}</td>-->
+
+                    <td> {{ agenda.hora_inicio }}</td>
+                    <td> {{ agenda.hora_fim }}</td>
+                    <td> {{ agenda.auditorio }}</td>
+                    <td> {{ agenda.evento }}</td>
+                    <td> {{ agenda.numero_pessoas }}</td>
+                    <td> {{ agenda.solicitante }}</td>
+                    <td> {{ agenda.contato }}</td>
+                    <td> {{ agenda.equipamento }}</td>
+                    <td> {{ agenda.get_status_display }}</td>
+                    <td> {{ agenda.termo_assinado }}</td>
+
+
+                    <td class="has-text-centered is-flex is-flex-wrap-nowrap is-justify-content-center">
+                        <a href="{% url 'agenda_editar' agenda.pk %}">
+                                            <span class="icon">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
+                        </a>
+
+                        <a href="{% url 'agenda_apagar' agenda.pk %}">
+                                            <span class="icon">
+                                                <i class="far fa-trash-alt"></i>
+                                            </span>
+                        </a>
+                    </td>
+                    <div class="modal" id="modal{{ agenda.id }}">
+                        <div class="modal-background"></div>
+                        <div class="modal-card">
+                            <header class="modal-card-head">
+                                <p class="modal-card-title">Agenda: {{ agenda.evento }}</p>
+                                <button class="delete" aria-label="close" data-bulma-modal="close"
+                                        id="btnClose"></button>
+                            </header>
+                            <section class="modal-card-body is-flex is-justify-content-center">
+                                <div class="content">
+<!--                                    <p class="image is-128x128">-->
+<!--                                        <img src="{{ agenda.foto.url }}" class="img-fluid" alt=""/>-->
+<!--                                    </p>-->
+                                </div>
+                            </section>
+                            <footer class="modal-card-foot">
+                                <p>Nome Popular: {{ agenda.auditorio }}</p>
+
+                            </footer>
+                        </div>
+                    </div>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% include "paginator.html" %}
+</section>
+{% endif %}
+{% endblock %}
+

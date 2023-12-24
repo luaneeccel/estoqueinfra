@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns is-mobile">
+            <div class="column is-half is-offset-one-quarter">
+                <h3 class="title is-size-3">Dados do Produto</h3>
+                <p class="p-2 mt-2"><strong>Nome: </strong> {{ object.nome }} </p>
+                <p class="p-2 mt-2"><strong>Codigo: </strong> {{ object.codigo }} </p>
+                <img src="{{ object.foto.thumbnail.url }}" class="img-fluid" alt=""/>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <p> Confirma a exclusão do Produto "{{ object }}"? </p>
+                    <br/>
+                    <button class="button is-link is-primary" type="submit">Apagar</button>
+                    <button class="button is-danger is-pulled-right" type="reset">
+                        <a href="{% url 'produtos' %}">Cancelar</a>
+                    </button>
+                </form>
+            </div>
+            </div>
+        </div>
+</section>
+{% endblock %}
+
+>

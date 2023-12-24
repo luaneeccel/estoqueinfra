@@ -1,6 +1,6 @@
 from django.db import models
 from stdimage import StdImageField
-from django_select2 import forms as s2forms
+# from django_select2 import forms as s2forms
 # Create your models here.
 class Produto(models.Model):
     nome=models.CharField('Nome', max_length=50, help_text='Nome do Produto')

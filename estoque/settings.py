@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_APPS += ['stdimage', 'django_select2',]
-INSTALLED_APPS += ['home', 'produto', 'entrada', 'saida',]
+INSTALLED_APPS += ['home', 'produto', 'entrada', 'saida','agenda']
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
