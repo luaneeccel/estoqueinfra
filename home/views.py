@@ -1,13 +1,32 @@
 from django.shortcuts import render
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 # def index(request):
 #    return render(request, 'index.html')
 from django.views.generic import TemplateView
 from django.db.models import F
-
+from django.contrib import admin
 from produto.models import Produto
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate
+
+def login(request):
+    if request.method == 'POST':
+        usuario = request.POST['usuario']
+        senha = request.POST['senha']
+        user = authenticate(request, username=usuario, password=senha)
+
+        if user is not None:
+            # Autenticação bem-sucedida
+            return redirect('index')
+        else:
+            # Autenticação falhou
+            return render(request, 'login.html', {'erro': 'Credenciais inválidas'})
+    return render(request, 'login.html')
+
+def pagina_destino(request):
+    return render(request, 'index.html')
 
 class IndexView(TemplateView):
     template_name = 'index.html'

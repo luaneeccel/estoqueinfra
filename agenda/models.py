@@ -32,6 +32,10 @@ class Agenda(models.Model):
         ('pronto', 'Tudo pronto'),
     )
 
+    TERMO_CHOICES = (
+        ('N', 'Não'),
+        ('S', 'Sim')
+    )
 
     auditorio = models.ForeignKey(Auditorio, on_delete=models.CASCADE, verbose_name='Auditório', help_text='Auditório', default='')
 
@@ -47,10 +51,12 @@ class Agenda(models.Model):
     solicitante = models.CharField('Nome Solicitante',max_length=255, help_text='Nome do solicitante.',default='', blank=True)
     contato = models.CharField('Contato Solicitante',max_length=155, help_text='Contato do solicitante.',default='', blank=True)
     equipamento = models.TextField('Equipamentos', help_text='Lista de equipamentos necessários.',default='', blank=True)
-    data = models.DateField('Data', help_text='Data do evento.',default='', blank=True)
+    data = models.DateField('Data', help_text='Data do evento.',default='', blank=True )
     hora_inicio = models.TimeField('Hora Início', help_text='Hora de início do evento.',default='', blank=True)
     hora_fim = models.TimeField('Hora Fim', help_text='Hora de fim do evento.',default='', blank=True)
 
+    termo = models.CharField('Termo de Responsabilidade', max_length=50, help_text='Assinado Termo de Responsabilidade', choices=TERMO_CHOICES,
+                             default='N')
 
     class Meta:
         verbose_name = 'Agendamento'

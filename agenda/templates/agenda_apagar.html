@@ -4,17 +4,24 @@
     <div class="container">
         <div class="columns is-mobile">
             <div class="column is-half is-offset-one-quarter">
-                <h3 class="title is-size-3">Dados do Produto</h3>
-                <p class="p-2 mt-2"><strong>Nome: </strong> {{ object.nome }} </p>
-                <p class="p-2 mt-2"><strong>Codigo: </strong> {{ object.codigo }} </p>
-                <img src="{{ object.foto.thumbnail.url }}" class="img-fluid" alt=""/>
+                <h3 class="title is-size-3">Dados do Agendamento</h3>
+
+                <p class="p-2 mt-2"><strong>Evento: </strong> {{ object.evento }} </p>
+                <p class="p-2 mt-2"><strong>Solicitante: </strong> {{ object.solicitante }} </p>
+                <p class="p-2 mt-2"><strong>Auditório: </strong> {{ object.auditorio }} </p>
+                <p class="p-2 mt-2"><strong>Data: </strong> {{ object.data|date:"d/m/Y"  }} </p>
+
+                <p class="p-2 mt-2"><strong>Hora Inicio: </strong> {{ object.hora_inicio  }} </p>
+                <p class="p-2 mt-2"><strong>Hora Fim: </strong> {{ object.hora_fim  }} </p>
+
+
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <p> Confirma a exclusão do Produto "{{ object }}"? </p>
+                    <p> Confirma a exclusão do Agendamento "{{ object }}"? </p>
                     <br/>
                     <button class="button is-link is-primary" type="submit">Apagar</button>
                     <button class="button is-danger is-pulled-right" type="reset">
-                        <a href="{% url 'produtos' %}">Cancelar</a>
+                        <a href="{% url 'agendas' %}">Cancelar</a>
                     </button>
                 </form>
             </div>

@@ -73,12 +73,12 @@
                 <tbody>
                 {% for agenda in object_list %}
                 <tr>
-                    <td>
-                        <a href="#" data-bulma-modal="modal{{ agenda.id }}">
-                            {{ agenda.data|date:"d/m/Y" }}
-                        </a>
-
-<!--                    <td> {{ agenda.data|date:"d/m/Y" }}</td>-->
+<!--                    <td>-->
+<!--                        <a href="#" data-bulma-modal="modal{{ agenda.id }}">-->
+<!--                            {{ agenda.data|date:"d/m/Y" }}-->
+<!--                        </a>-->
+<!--                    </td>-->
+                    <td> {{ agenda.data|date:"d/m/Y" }}</td>
 
                     <td> {{ agenda.hora_inicio }}</td>
                     <td> {{ agenda.hora_fim }}</td>
@@ -89,7 +89,7 @@
                     <td> {{ agenda.contato }}</td>
                     <td> {{ agenda.equipamento }}</td>
                     <td> {{ agenda.get_status_display }}</td>
-                    <td> {{ agenda.termo_assinado }}</td>
+                    <td> {{ agenda.get_termo_display }}</td>
 
 
                     <td class="has-text-centered is-flex is-flex-wrap-nowrap is-justify-content-center">

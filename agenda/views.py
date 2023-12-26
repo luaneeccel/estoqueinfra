@@ -6,9 +6,10 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
 from .models import Agenda
 from .forms import AgendaListForm, AgendaModelForm
-
+from django.shortcuts import redirect
 from datetime import date, timedelta
-
+from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
@@ -82,51 +83,44 @@ class AgendasView(ListView):
 
 
 #
-class AgendaAddView(SuccessMessageMixin, CreateView):
+class AgendaAddView(CreateView):
     form_class = AgendaModelForm
     model = Agenda
     template_name = 'agenda_form.html'
     success_url = reverse_lazy('agendas')
-    success_message = 'Agendamento cadastrado com sucesso!'
 
-    #     # se o botao "salvar e continuar" for clicado, ele vai pegar os dados da ultima criação e redirecionar para a pagina de criação de agendamento com os dados preenchidos
-    #
-    #     # inserir os dados e redirecione para a pagina de criação de agendamento com os dados preenchidos da ultima criação
     def form_valid(self, form):
-        # Lógica padrão de validação do formulário
-        response = super().form_valid(form)
-        # Se o botão "Salvar e Novo" foi clicado
+        # If the 'save_and_new' button is clicked
         if 'save_and_new' in self.request.POST:
-            # Redirecionar para a tela de criação com os dados preenchidos
+            # Save the form data and then render a new form with the initial data
+            self.object = form.save(commit=False)
 
-            initial = {
-                'codigo': form.cleaned_data['codigo'],
-                'nome': form.cleaned_data['nome'],
-                'observacao': form.cleaned_data['observacao'],
-                'tipo': form.cleaned_data['tipo'],
-                'quantidademin': form.cleaned_data['quantidademin'],
-                'quantidade': form.cleaned_data['quantidade'],
-                'unidade': form.cleaned_data['unidade'],
-                'foto': form.cleaned_data['foto'],
+            # Make sure to include the 'data' field in the initial data
+            initial_data = {
+                'auditorio': form.cleaned_data['auditorio'],
+                'evento': form.cleaned_data['evento'],
+                'solicitante': form.cleaned_data['solicitante'],
+                'numero_pessoas': form.cleaned_data['numero_pessoas'],
+                'contato': form.cleaned_data['contato'],
+                'status': form.cleaned_data['status'],
+                'data': form.cleaned_data['data'],
+                'equipamento': form.cleaned_data['equipamento'],
             }
-            form = AgendaModelForm(initial=initial)
+
+            # Set the 'data' field on the instance before saving
+            self.object.data = initial_data['data']
+
+            # Save the instance
+            self.object.save()
+
+            # Create a new form with the initial data
+            form = AgendaModelForm(initial=initial_data)
             context = {'form': form}
-            from django.shortcuts import render
             return render(self.request, 'agenda_form.html', context)
+        else:
+            # If the 'save' button is clicked, proceed with the default behavior
+            return super().form_valid(form)
 
-
-#     def get_initial(self):
-#         #if button is clicked
-#         if self.request.POST.post('salvar'):
-#             initial = super(AgendaAddView, self).get_initial()
-#             initial['auditorio'] = self.request.GET.get('auditorio')
-#             initial['requester_name'] = self.request.GET.get('requester_name')
-#             initial['event_name'] = self.request.GET.get('event_name')
-#             initial['requester_contact'] = self.request.GET.get('requester_contact')
-#             initial['number_of_people'] = self.request.GET.get('number_of_people')
-#             initial['observacao'] = self.request.GET.get('observacao')
-#             return initial
-#
 
 class AgendaUpDateView(SuccessMessageMixin, UpdateView):
     form_class = AgendaModelForm
@@ -135,7 +129,36 @@ class AgendaUpDateView(SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy('agendas')
     success_message = 'Agendamento alterado com sucesso!'
 
+    def form_valid(self, form):
+        # If the 'save_and_new' button is clicked
+        if 'save_and_new' in self.request.POST:
+            # Create a new instance with the same data and save it
+            new_agenda = form.save(commit=False)
+            new_agenda.pk = None  # Set the primary key to None to create a new instance
+            new_agenda.save()
 
+            # Redirect to edit the new instance
+            return redirect('agenda_editar', pk=new_agenda.pk)
+        else:
+            # If the 'save' button is clicked, proceed with the default behavior
+            return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['duplicate'] = True  # Add a flag to indicate duplication
+        return context
+
+    def get(self, request, *args, **kwargs):
+        # Override get method to handle the 'duplicate' parameter in the URL
+        if 'duplicate' in self.request.GET:
+            # Load the existing agenda item to duplicate
+            existing_agenda = get_object_or_404(Agenda, pk=self.kwargs['pk'])
+            # Populate the form with existing data
+            form = self.get_form(instance=existing_agenda)
+            # Render the form with the 'duplicate' flag
+            return render(request, 'agenda_form.html', {'form': form, 'duplicate': True})
+        else:
+            return super().get(request, *args, **kwargs)
 class AgendaDeleteView(SuccessMessageMixin, DeleteView):
     model = Agenda
     template_name = 'agenda_apagar.html'

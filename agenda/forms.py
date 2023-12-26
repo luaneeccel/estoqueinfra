@@ -7,6 +7,7 @@ from datetime import date, timedelta
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+
 #
 #
 # class DataListFilter(admin.SimpleListFilter):
@@ -31,16 +32,14 @@ from django.utils.translation import gettext_lazy as _
 #             return queryset.filter(data__month=date.today().month, data__year=date.today().year)
 
 
-
 class AgendaListForm(forms.Form):
-
     status_choices = (
         ('contato', 'Entrar em contato'),
         ('arrumar', 'Arrumar auditório'),
         ('pronto', 'Tudo pronto'),
     )
 
-    filtro_tempo_choices= (
+    filtro_tempo_choices = (
         ('td', 'Todos os Eventos'),
         ('dia', 'Eventos do Dia'),
         ('semana', 'Eventos da Semana'),
@@ -48,7 +47,13 @@ class AgendaListForm(forms.Form):
 
     )
 
+    TERMO_CHOICES = (
+        ('N', 'Não'),
+        ('S', 'Sim')
+    )
 
+    data = forms.DateField(label='Data: ', widget=forms.DateInput(
+        attrs={'class': 'input', 'placeholder': 'Digite a data do evento'}), required=False)
     auditorio = forms.ModelChoiceField(label='Auditório:', widget=forms.Select(
         attrs={'class': 'select is-fullwidth'}), queryset=Auditorio.objects.all(), required=False)
 
@@ -79,21 +84,18 @@ class AgendaListForm(forms.Form):
     numero_pessoas = forms.IntegerField(label='Quantidade de Pessoas:', widget=forms.NumberInput(
         attrs={'class': 'input', 'placeholder': 'Digite a quantidade de pessoas'}), required=False)
 
-
-
-
-
-
+    termo = forms.ChoiceField(label='Termo de Responsabilidade:', widget=forms.Select(
+        attrs={'class': 'select is-fullwidth'}), choices=TERMO_CHOICES, required=False)
 #
 class AgendaModelForm(forms.ModelForm):
     class Meta:
         model = Agenda
-        fields = ['auditorio', 'observacao', 'status', 'evento', 'numero_pessoas', 'solicitante', 'contato',
-                    'equipamento', 'data', 'hora_inicio', 'hora_fim']
-#
+        fields = ['auditorio', 'evento', 'solicitante', 'data', 'hora_inicio', 'hora_fim',
+                  'numero_pessoas', 'contato', 'termo', 'status',
+                  'equipamento']
+        #
         widgets = {
             'auditorio': forms.Select(attrs={'class': 'input', 'placeholder': 'Selecione o auditório'}),
-            'observacao': forms.TextInput(attrs={'class': 'input', 'placeholder': 'Digite a observação'}),
             'status': forms.Select(attrs={'class': 'input', 'placeholder': 'Selecione o status'}),
             'evento': forms.TextInput(attrs={'class': 'input', 'placeholder': 'Digite o nome do evento'}),
             'numero_pessoas': forms.NumberInput(
@@ -107,5 +109,7 @@ class AgendaModelForm(forms.ModelForm):
                 attrs={'class': 'input', 'type': 'time', 'placeholder': 'Digite a hora de início'}),
             'hora_fim': forms.TimeInput(
                 attrs={'class': 'input', 'type': 'time', 'placeholder': 'Digite a hora de fim'}),
-        }
+            'termo': forms.Select(
+                attrs={'class': 'input', 'placeholder': 'Selecione o status do termo de responsabilidade'}),
 
+        }

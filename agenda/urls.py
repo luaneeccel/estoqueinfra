@@ -6,4 +6,5 @@ urlpatterns = [
     path('agenda/adicionar/', AgendaAddView.as_view(), name='agenda_adicionar'),
     path('<int:pk>/agenda/editar/', AgendaUpDateView.as_view(), name='agenda_editar'),
     path('<int:pk>/agenda/apagar/', AgendaDeleteView.as_view(), name='agenda_apagar'),
+
 ]

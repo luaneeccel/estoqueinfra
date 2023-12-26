@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-INSTALLED_APPS += ['stdimage', 'django_select2',]
+INSTALLED_APPS += ['stdimage',]
 INSTALLED_APPS += ['home', 'produto', 'entrada', 'saida','agenda']
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
