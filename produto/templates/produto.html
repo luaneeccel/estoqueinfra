@@ -1,95 +1,115 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    <section class="section has-background-link-light">
-        <div class="container">
-            <form action="" method="GET">
-                <div class="field is-grouped is-flex is-align-items-center is-flex-wrap-wrap">
-                    <label class="label p-2 mt-2">Nome do produto: </label>
-                    <div class="control is-expanded">
-                        <input class="input" type="text" name="buscar" value="{{ request.GET.buscar }}"
-                               placeholder="Digite o nome do produto">
-                    </div>
-                    <div class="control">
-                        <button type="button" class="button is-link">
-                            Buscar
-                        </button>
-                    </div>
+{% if object_list %}
+<section class="section has-background-link-light">
+    <div class="container">
+        <form id="formListaProdutos" action="" method="GET">
+            <input type="hidden" name="imprimir" id="imprimir" value="">
+            <div class="field is-grouped is-flex is-align-items-center is-flex-wrap-wrap">
+
+                <label class="label p-2 mt-2">{{ form.filtro_num.label }} </label>
+                <div class="control is-expanded">
+                    {{ form.filtro_num }}
                 </div>
-            </form>
 
-            {% if object_list %}
-                <div style="text-align: center;">
-                    <h1 class="subtitle is-size-4">Produtos Cadastrados</h1>
+
+                <label class="label p-2 mt-2">Nome do produto : </label>
+                <div class="control is-expanded">
+                    <input class="input" type="text" name="buscar" value="{{ request.GET.buscar }}"
+                           placeholder="Digite o nome do produto">
                 </div>
-                <div class="table">
-                    <table class="table is-table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-                        <thead>
-                        <tr>
-                            <th class="has-text-centered">Nome</th>
-                            <th class="has-text-centered">Código</th>
-                            <th class="has-text-centered">Quantidade</th>
-                            <th class="has-text-centered">Foto</th>
 
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for produto in object_list %}
-                            <tr>
-                                <td><a href="#" data-toogle="modal" class="modal-target"
-                                       data-bulma-modal="modal{{ produto.id }}" id="modal{{ produto.id }}">
-                                    {{ produto.nome }}
-                                </a>
-                                </td>
-                                <td> {{ produto.codigo }} </td>
-                                <td> {{ produto.quantidade }} </td>
+                <div class="control">
+                    <button type="button" class="button is-link" onclick="geraPdf('', 'formListaProdutos');">
+                        Buscar
+                    </button>
+                </div>
 
-                                <td style="text-align: center; display: flex; justify-content: center; align-items: center;">
-                                    <p class="image is-128x128">
-                                        <img src="{{ produto.foto.url }}" class="img-fluid" alt=""/>
-                                    </p>
-                                </td>
+            </div>
+        </form>
 
-                                <div class="modal" id="modal{{ produto.id }}">
-                                    <div class="modal-background"></div>
-                                    <div class="modal-card">
-                                        <header class="modal-card-head">
-                                            <p class="modal-card-title">Detalhes do Produto: {{ produto.nome }}</p>
-                                            <button class="delete" aria-label="close" data-bulma-modal="close"
-                                                    id="btnClose{{ produto.id }}"></button>
-                                        </header>
-                                        <section class="modal-card-body is-flex is-justify-content-center">
+        <div style="text-align: center;"><h1 class="subtitle is-size-4">Produtos Cadastradas</h1></div>
+        <div class="table">
+            <table class="table is-table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                <thead>
+                <tr>
+                    <th class="has-text-centered">Nome</th>
+                    <th class="has-text-centered">Código</th>
+                    <th class="has-text-centered">Quantidade</th>
+                    <th class="has-text-centered">Foto</th>
 
-                                            <div class="content">
-                                                <div class="content" >
-                                                <p class="image is-128x128">
-                                                    <img src="{{ produto.foto.url }}" class="img-fluid" alt=""/>
-                                                </p>
-                                            </div>
-                                                <p>Código: {{ produto.codigo }}</p>
-                                                <p>Quantidade: {{ produto.quantidade }}</p>
-                                                <p>Observações: {{ produto.observacao }}</p>
-                                                <p>Quantidade Mínima: {{ produto.quantidademin }}</p>
-                                                <!-- Adicione mais informações conforme necessário -->
-                                            </div>
-                                        </section>
-                                        <!-- Adicione mais informações do produto aqui se necessário -->
+                    <!--                    <th class="has-text-centered" style="width: 100px;">Ações</th>-->
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for produto in object_list %}
+
+
+                <tr>
+                    <!--                    <td>-->
+                    <!--                        <a href="#" data-bulma-modal="modal{{ agenda.id }}">-->
+                    <!--                            {{ agenda.data|date:"d/m/Y" }}-->
+                    <!--                        </a>-->
+                    <!--                    </td>-->
+
+
+                    <!--                     <td>-->
+                    <!--                        <a href="#" data-bulma-modal="modal{{ agenda.id }}">-->
+                    <!--                            {{ agenda.data|date:"d/m/Y" }}-->
+                    <!--                        </a>-->
+                    <!--                    </td>-->
+                    <td><a href="#" data-toogle="modal" class="modal-target"
+                           data-bulma-modal="modal{{ produto.id }}">
+                        {{ produto.nome }}
+                    </a>
+                    </td>
+                    <td> {{ produto.codigo }}</td>
+                    <td> {{ produto.quantidade }}</td>
+
+                    <td style="text-align: center; display: flex; justify-content: center; align-items: center;">
+                        <p class="image is-128x128">
+                            <img src="{{ produto.foto.url }}" class="img-fluid" alt=""/>
+                        </p>
+                    </td>
+
+
+
+
+                    <div class="modal" id="modal{{ produto.id }}">
+                        <div class="modal-background"></div>
+                        <div class="modal-card">
+                            <header class="modal-card-head">
+                                <p class="modal-card-title">Detalhes do Produto: {{ produto.nome }}</p>
+                                <button class="delete" aria-label="close" data-bulma-modal="close"
+                                        id="btnClose{{ produto.id }}"></button>
+                            </header>
+                            <section class="modal-card-body is-flex is-justify-content-center">
+
+                                <div class="content">
+                                    <div class="content">
+                                        <p class="image is-128x128">
+                                            <img src="{{ produto.foto.url }}" class="img-fluid" alt=""/>
+                                        </p>
                                     </div>
+                                    <p>Código: {{ produto.codigo }}</p>
+                                    <p>Quantidade: {{ produto.quantidade }}</p>
+                                    <p>Observações: {{ produto.observacao }}</p>
+                                    <p>Quantidade Mínima: {{ produto.quantidademin }}</p>
+                                    <!-- Adicione mais informações conforme necessário -->
                                 </div>
-
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-
-                    </table>
-                </div>
-
-
-            {% else %}
-                <h2>Não existem produtos cadastrados</h2>
-            {% endif %}
+                            </section>
+                        </div>
+                    </div>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
-
-        {% include "paginator.html" %}
-    </section>
+    </div>
+    {% include "paginator.html" %}
+</section>
+{% endif %}
 {% endblock %}
+

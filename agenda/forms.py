@@ -33,6 +33,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class AgendaListForm(forms.Form):
+
     status_choices = (
         ('contato', 'Entrar em contato'),
         ('arrumar', 'Arrumar auditório'),

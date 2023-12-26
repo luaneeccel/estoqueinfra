@@ -2,28 +2,65 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.db.models import Q
-
+from django.contrib import messages
 # Create your views here.
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-
+from django.db.models import F
 from .models import Produto
-from .forms import ProdutoModelForm
+from .forms import ProdutoModelForm, ProdutoListForm
+
+
 class ProdutoView(ListView):
     model = Produto
     template_name = 'produto.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(ProdutoView, self).get_context_data(**kwargs)
+
+        if self.request.GET:
+            form = ProdutoListForm(self.request.GET)
+        else:
+            form = ProdutoListForm()
+
+        context['form'] = form
+
+        return context
+
     def get_queryset(self, *args, **kwargs):
         buscar = self.request.GET.get('buscar')
-        buscar_codigo = self.request.GET.get('buscar_codigo')
-
         qs = super(ProdutoView, self).get_queryset(*args, **kwargs)
+        qs2 = qs
 
-        if buscar:
-            qs = qs.filter(Q(nome__icontains=buscar) | Q(codigo__icontains=buscar_codigo))
+        if self.request.GET:
+            form = ProdutoListForm(self.request.GET)
+            if form.is_valid():
+                filtro_num = form.cleaned_data.get('filtro_num')
 
-        paginator = Paginator(qs, 2)
-        listagem = paginator.get_page(self.request.GET.get('page'))
-        return listagem
+                if filtro_num == 'td':
+                    qs = qs
+                elif filtro_num == 'abaixo':
+                    qs = qs.filter(quantidade__lt=F('quantidademin'))
+                elif filtro_num == 'acima':
+                    qs = qs.filter(quantidade__gt=F('quantidademin'))
+
+                if buscar:
+                    qs = qs.filter(Q(nome__icontains=buscar)) | qs.filter(Q(codigo__icontains=buscar))
+
+        if qs.count() > 0:
+            paginator = Paginator(qs, 10)
+            listagem = paginator.get_page(self.request.GET.get('page'))
+            return listagem
+        else:
+            messages.info(self.request, "Não existem produtos cadastrados!")
+            return qs
+
+    # def get(self, *args, **kwargs):
+    #     if self.request.GET.get('imprimir') == 'pdf':
+    #         html_pdf = HtmlToPdf(arquivo='agendas_pdf', qs=self.get_queryset())
+    #         return html_pdf.response
+    #     else:
+    #         return super(AgendasView, self).get(*args, **kwargs)
+
 class ProdutoAddView(CreateView):
     form_class = ProdutoModelForm
     model = Produto
