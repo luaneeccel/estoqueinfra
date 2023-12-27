@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <style>
+        body {
+            background-color: #004e78; /* Cor de fundo azul */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Altura total da viewport */
+            margin: 0; /* Remover margens padrão */
+        }
+
+        form {
+            background-color: #ffffff; /* Cor de fundo branca para o formulário */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        }
+
+        h4 {
+            color: #00000; /* Cor do texto branco */
+            text-align: center;
+        }
+
+        label {
+            color: #00000; /* Cor do texto branco */
+        }
+
+        input {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 90%;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #2ecc71; /* Cor de fundo verde para o botão */
+            color: #ffffff; /* Cor do texto branco */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #27ae60; /* Cor de fundo verde mais escura quando hover */
+        }
+
+        p {
+            color: #e74c3c; /* Cor do texto vermelho para mensagens de erro */
+        }
+    </style>
+</head>
+<body>
+
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+
+        <h4>Digite suas credenciais para acessar</h4>
+        {% if erro %}
+            <p>{{ erro }}</p>
+        {% endif %}
+        <label for="usuario">Usuário:</label>
+        <input type="text" name="usuario" required><br>
+        <label for="senha">Senha:</label>
+        <input type="password" name="senha" required><br>
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>

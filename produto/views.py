@@ -40,8 +40,8 @@ class ProdutoView(ListView):
                     qs = qs
                 elif filtro_num == 'abaixo':
                     qs = qs.filter(quantidade__lt=F('quantidademin'))
-                elif filtro_num == 'acima':
-                    qs = qs.filter(quantidade__gt=F('quantidademin'))
+                elif filtro_num == 'zero':
+                    qs = qs.filter(quantidade=0)
 
                 if buscar:
                     qs = qs.filter(Q(nome__icontains=buscar)) | qs.filter(Q(codigo__icontains=buscar))
@@ -68,42 +68,43 @@ class ProdutoAddView(CreateView):
     success_url = reverse_lazy('produtos')
 
     def form_valid(self, form):
-        # Lógica padrão de validação do formulário
-        response = super().form_valid(form)
+        # Verificar se todas as informações necessárias estão presentes
+        if (
+            form.cleaned_data['codigo'] and
+            form.cleaned_data['nome'] and
+            form.cleaned_data['observacao'] and
+            form.cleaned_data['tipo'] and
+            form.cleaned_data['quantidademin'] is not None and
+            form.cleaned_data['quantidade'] is not None and
+            form.cleaned_data['unidade'] and
+            form.cleaned_data['foto']
+        ):
+            # Se tudo estiver presente, prosseguir com a lógica padrão
+            response = super().form_valid(form)
 
-        # Se o botão "Salvar e Novo" foi clicado
-        if 'save_and_new' in self.request.POST:
-            # Redirecionar para a tela de criação com os dados preenchidos
-            # fields = ['foto', 'codigo', 'nome', 'observacao', 'tipo', 'quantidademin', 'quantidade', 'unidade']
+            # Se o botão "Salvar e Novo" foi clicado
+            if 'save_and_new' in self.request.POST:
+                # Redirecionar para a tela de criação com os dados preenchidos
+                initial = {
+                    'codigo': form.cleaned_data['codigo'],
+                    'nome': form.cleaned_data['nome'],
+                    'observacao': form.cleaned_data['observacao'],
+                    'tipo': form.cleaned_data['tipo'],
+                    'quantidademin': form.cleaned_data['quantidademin'],
+                    'quantidade': form.cleaned_data['quantidade'],
+                    'unidade': form.cleaned_data['unidade'],
+                    'foto': form.cleaned_data['foto'],
+                }
+                form = ProdutoModelForm(initial=initial)
+                context = {'form': form}
+                return render(self.request, 'produto_form.html', context)
 
-            initial = {
-                'codigo': form.cleaned_data['codigo'],
-                'nome': form.cleaned_data['nome'],
-                'observacao': form.cleaned_data['observacao'],
-                'tipo': form.cleaned_data['tipo'],
-                'quantidademin': form.cleaned_data['quantidademin'],
-                'quantidade': form.cleaned_data['quantidade'],
-                'unidade': form.cleaned_data['unidade'],
-                'foto': form.cleaned_data['foto'],
-            }
-            form = ProdutoModelForm(initial=initial)
+            return response
+        else:
+            # Se alguma informação estiver ausente, exibir uma mensagem de erro
+            form.add_error(None, 'Por favor, preencha todas as informações, incluindo a foto.')
             context = {'form': form}
             return render(self.request, 'produto_form.html', context)
-
-
-        return None
-    # def get_initial(self):
-    #     #if button is clicked
-    #     if self.request.POST.get('salvar'):
-    #         initial = super(ProdutoAddView, self).get_initial()
-    #         initial['codigo'] = self.request.POST.get('codigo')
-    #         initial['nome'] = self.request.POST.get('nome')
-    #         initial['descricao'] = self.request.POST.get('descricao')
-    #         initial['preco'] = self.request.POST.get('preco')
-    #         initial['quantidade'] = self.request.POST.get('quantidade')
-    #         return initial
-
-
 class ProdutoEditRemov(ListView):
     model = Produto
     template_name = 'editremov.html'

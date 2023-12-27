@@ -7,4 +7,5 @@ urlpatterns = [
     path('editremov', ProdutoEditRemov.as_view(), name='editremov'),
     path('<int:pk>/produto/editar/', ProdutoUpDateView.as_view(), name='produto_editar'),
     path('<int:pk>/produto/apagar/', ProdutoDeleteView.as_view(), name='produto_apagar'),
+
 ]

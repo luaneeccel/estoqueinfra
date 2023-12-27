@@ -6,7 +6,7 @@ class ProdutoListForm(forms.Form):
     filtro_num_choices = (
         ('td', 'Todos os Produtos'),
         ('abaixo', 'Abaixo da quantidade mínima'),
-        ('acima', 'Acima da quantidade mínima'),
+        ('zero', 'Produtos Zerados'),
     )
 
     filtro_num = forms.ChoiceField(label='Filtro de  numero produto:', widget=forms.Select(

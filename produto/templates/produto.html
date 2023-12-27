@@ -28,26 +28,27 @@
 
             </div>
         </form>
+        <div>
+        </form>
+        <div>
+            <!-- Adicione o botão de impressão -->
+            <button onclick="imprimir()" class="no-print button is-info">Imprimir Tabela</button>
+        </div>
 
         <div style="text-align: center;"><h1 class="subtitle is-size-4">Produtos Cadastradas</h1></div>
-        <div class="table">
-            <table class="table is-table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-                <thead>
+        <!-- Crie uma nova tabela específica para impressão -->
+        <table id="tabelaProdutos" class="table is-table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+            <thead>
                 <tr>
                     <th class="has-text-centered">Nome</th>
                     <th class="has-text-centered">Código</th>
                     <th class="has-text-centered">Quantidade</th>
                     <th class="has-text-centered">Foto</th>
-
-                    <!--                    <th class="has-text-centered" style="width: 100px;">Ações</th>-->
                 </tr>
-                </thead>
-                <tbody>
-
+            </thead>
+            <tbody>
                 {% for produto in object_list %}
-
-
-                <tr>
+                    <tr>
                     <!--                    <td>-->
                     <!--                        <a href="#" data-bulma-modal="modal{{ agenda.id }}">-->
                     <!--                            {{ agenda.data|date:"d/m/Y" }}-->
@@ -102,14 +103,70 @@
                             </section>
                         </div>
                     </div>
-                </tr>
+                 </tr>
                 {% endfor %}
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
     {% include "paginator.html" %}
 </section>
+<script>
+    function imprimir() {
+        // Cria uma nova janela de impressão
+        var janelaImpressao = window.open('', '_blank');
+
+        // Adiciona o cabeçalho à nova janela de impressão
+        var dataAtual = new Date();
+        var dataFormatada = dataAtual.toLocaleDateString();
+        var horaFormatada = dataAtual.toLocaleTimeString();
+        var cabecalho = '<div style="text-align: center; margin-bottom: 20px;">';
+        cabecalho += '<img src="static/img/LOGO-INFRA-PNG.png" alt="Logo" style="max-width: 100px; max-height: 100px;"/>';
+        cabecalho += '<p>Data de Impressão: ' + dataFormatada + ' | Hora de Impressão: ' + horaFormatada + '</p>';
+        cabecalho += '</div>';
+        janelaImpressao.document.write(cabecalho);
+
+        // Copia a tabela original para a tabela específica de impressão
+        var tabelaOriginal = document.getElementById('tabelaProdutos');
+        var tabelaImpressao = tabelaOriginal.cloneNode(true);
+
+        // Remove a coluna de fotos (última coluna)
+        var linhas = tabelaImpressao.getElementsByTagName('tr');
+        for (var i = 0; i < linhas.length; i++) {
+            linhas[i].deleteCell(-1);
+        }
+
+        // Adiciona a borda e centraliza as células da tabela
+        var celulas = tabelaImpressao.getElementsByTagName('td');
+        for (var i = 0; i < celulas.length; i++) {
+            celulas[i].style.border = '1px solid #ddd';
+            celulas[i].style.padding = '8px'; // Adiciona algum espaço para melhorar a aparência
+            celulas[i].style.textAlign = 'center'; // Centraliza o conteúdo
+        }
+
+        // Adiciona a borda e centraliza as células da primeira linha (títulos)
+        var titulos = tabelaImpressao.getElementsByTagName('th');
+        for (var i = 0; i < titulos.length; i++) {
+            titulos[i].style.border = '1px solid #ddd';
+            titulos[i].style.padding = '8px'; // Adiciona algum espaço para melhorar a aparência
+            titulos[i].style.textAlign = 'center'; // Centraliza o conteúdo
+        }
+
+        // Adiciona estilos de centralização na janela de impressão
+        var estilo = janelaImpressao.document.createElement('style');
+        estilo.innerHTML = 'table { margin: 0 auto; }'; // Centraliza a tabela
+        estilo.innerHTML += 'img { max-width: 10%; max-height: 10%; }'; // Redimensiona as imagens
+        janelaImpressao.document.head.appendChild(estilo);
+
+        // Adiciona a tabela clonada à nova janela de impressão
+        janelaImpressao.document.body.appendChild(tabelaImpressao);
+
+        // Aciona o diálogo de impressão
+        janelaImpressao.print();
+    }
+</script>
+
+
+
+
 {% endif %}
 {% endblock %}
-
